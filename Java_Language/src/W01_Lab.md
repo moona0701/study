@@ -1,6 +1,4 @@
-# [Java_Lab]
-
-## Week 01
+# Week 01
 
 **[Lab 1] 커피 가격 계산**
 

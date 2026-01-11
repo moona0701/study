@@ -32,10 +32,11 @@
 
 ### [Project 3] Vocabulary Master (Ver.2 GUI)
 * **Path:** `Projects/3_VocaMaster_GUI`
-* **Description:** Ver.1의 로직을 Swing 프레임워크로 이식하여 UX 개선
+* **Description:** Ver.1의 로직을 Swing 프레임워크로 이식하고 팀원 코드를 통합(Integration)한 프로젝트
 * **Key Tech:**
-  - JFrame, JPanel 기반의 GUI 구성
-  - ActionListener 이벤트 처리를 통한 상호작용 구현
+  - **Architecture:** `VocManager`와 `JPanel` 분리를 통한 유지보수성 확보
+  - **Layout:** `JTabbedPane` 및 `CardLayout`을 활용한 직관적인 화면 구성
+  - **Collaboration:** 팀원별 분산된 코드를 취합하고 충돌을 해결하는 메인 개발자 역할 수행
  
 ---
 ###  Note

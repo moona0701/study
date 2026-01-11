@@ -1,134 +1,290 @@
 # Week 12
 
-**[Lab 1] 이벤트 리스너 구현 (익명/독립/내부 클래스)**
-
-* **내용:** 버튼 클릭 이벤트를 다양한 형태의 클래스로 구현합니다.
-* **코드 파일:** `week12/example01/Anony.java`
+**[Lab 1] 익명 클래스로 리스너 구현**
+* **내용:** `ActionListener`를 익명 클래스로 구현하여 코드를 간결하게 작성.
 
 ```java
 package week12.example01;
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Anony extends JFrame {
     Anony(){
+        setTitle("익명클래스 액션 이벤트리스너 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Container cp = getContentPane();
         cp.setLayout(new FlowLayout());
+
         JButton btn = new JButton("Action");
         cp.add(btn);
         
-        // 익명 클래스로 ActionListener 구현
+        // 익명 클래스 사용
         btn.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 JButton b = (JButton) e.getSource();
-                if (b.getText().equals("Action")) b.setText("액션");
-                else b.setText("Action");
+                if (b.getText().equals("Action"))
+                    b.setText("액션");
+                else
+                    b.setText("Action");
                 setTitle(b.getText());
             }
         });
-        // ...
+        setSize(200,100);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new Anony();
     }
 }
 
 ```
 
-**[Lab 2] 마우스 리스너**
+**[Lab 2] 독립 클래스로 리스너 구현**
+* **내용:** `ActionListener`를 구현한 별도의 클래스를 만들어 사용.
 
-* **내용:** 마우스를 클릭한 위치로 라벨을 이동시킵니다.
-* **코드 파일:** `week12/example02/MouseLisnerEx.java`
+```java
+package week12.example01;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Indep extends JFrame {
+    Indep(){
+        setTitle("독립클래스 액션 이벤트 리스너 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Container cp = getContentPane();
+        cp.setLayout(new FlowLayout());
+
+        JButton btn = new JButton("Action");
+        btn.addActionListener(new MyAcrionListner()); // 독립 클래스 객체 등록
+        cp.add(btn);
+        setSize(250,120);
+        setVisible(true);
+    }
+    public static void main(String[] args) { new Indep(); }
+}
+
+// 외부(독립) 클래스
+class MyAcrionListner implements ActionListener {
+    public void actionPerformed(ActionEvent e){
+        JButton b= (JButton)e.getSource();
+        if (b.getText().equals("Action"))
+            b.setText("액션");
+        else
+            b.setText("Action");
+    }
+}
+
+```
+
+**[Lab 3] 내부 클래스로 리스너 구현** 
+* **내용:** `ActionListener`를 `JFrame` 상속 클래스 내부의 멤버 클래스로 정의.
+
+```java
+package week12.example01;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Inner extends JFrame {
+    Inner(){
+        setTitle("내부클래스 액션 이벤트 리스너 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Container cp= getContentPane();
+        cp.setLayout(new FlowLayout());
+
+        JButton btn = new JButton("Action");
+        btn.addActionListener(new MyActionListner()); // 내부 클래스 객체 등록
+        cp.add(btn);
+        setSize(300,200);
+        setVisible(true);
+    }
+
+    // private 내부 클래스
+    private class MyActionListner implements ActionListener {
+        public void actionPerformed(ActionEvent e){
+            JButton b = (JButton)e.getSource();
+            if (b.getText().equals("Action"))
+                b.setText("액션");
+            else
+                b.setText("Action");
+            setTitle(b.getText());
+        }
+    }
+    public static void main(String[] args) { new Inner(); }
+}
+
+```
+
+**[Lab 4] 마우스 이벤트 리스너**
+* **내용:** 마우스를 클릭한 위치로 라벨("Hello")을 이동.
 
 ```java
 package week12.example02;
-import java.awt.event.*;
-// ...
-cp.addMouseListener(new MouseAdapter() {
-    @Override
-    public void mousePressed(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
-        la.setLocation(x, y);
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class MouseLisnerEx extends JFrame {
+    MouseLisnerEx(){
+        setTitle("마우스 이벤트 리스너 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Container cp = getContentPane();
+        cp.setLayout(null); // 절대 배치
+
+        JLabel la = new JLabel("Hello");
+        la.setSize(50,20);
+        la.setLocation(30,30);
+        cp.add(la);
+
+        cp.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int x = e.getX();
+                int y= e.getY();
+                la.setLocation(x,y); // 클릭 좌표로 이동
+            }
+        });
+
+        setSize(300,300);
+        setVisible(true);
     }
-});
+    public static void main(String[] args) { new MouseLisnerEx(); }
+}
 
 ```
 
-**[Lab 3] 키 리스너**
-
-* **내용:** 키보드 입력을 감지하고 특정 키(F1) 입력 시 배경색을 변경합니다.
-* **코드 파일:** `week12/example03/KeyCodeEx.java`
+**[Lab 5] 키 리스너**
+* **내용:** 입력된 키의 정보를 출력하고, F1키/특수문자 입력 시 배경색을 바꿈.
 
 ```java
-private class myKeyListner extends KeyAdapter {
-    public void keyPressed(KeyEvent e){
-        if (e.getKeyCode() == KeyEvent.VK_F1)
-            cp.setBackground(Color.GREEN);
-        else if (e.getKeyChar() == '%') {
-            cp.setBackground(Color.YELLOW);
+package week12.example03;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+public class KeyCodeEx extends JFrame {
+    JPanel cp = new JPanel();
+    JLabel keyMessage = new JLabel("키를 입력하시오.");
+
+    KeyCodeEx(){
+        setTitle("바탕색 변경 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setContentPane(cp);
+        cp.add(keyMessage);
+        
+        cp.addKeyListener(new myKeyListner());
+        
+        setSize(300,100);
+        setVisible(true);
+        cp.requestFocusInWindow(); // 포커스 설정 필수
+    }
+
+    private class myKeyListner extends KeyAdapter {
+        public void keyPressed(KeyEvent e){
+            keyMessage.setText(KeyEvent.getKeyText(e.getKeyCode())+"이 입력됨.");
+            
+            if (e.getKeyCode() == KeyEvent.VK_F1)
+                cp.setBackground(Color.GREEN);
+            else if (e.getKeyChar() == '%') {
+                cp.setBackground(Color.YELLOW);
+            }
         }
     }
+    public static void main(String[] args) { new KeyCodeEx(); }
 }
 
 ```
 
----
-
-## Week 13
-
-**[Lab 1] 스트림 API 활용**
-
-* **내용:** 리스트에 저장된 학생 데이터를 스트림을 이용해 정렬 및 필터링합니다.
-* **코드 파일:** `week13/lab01/TestMain.java`
+**[Lab 6] 키 리스너**
+* **내용:** 눌린 키의 Code, Char, Text 정보를 라벨 배열에 출력.
 
 ```java
-package week13.lab01;
-import java.util.*;
+package week12.example03;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
-public class TestMain {
-    public static void main(String[] args){
-        List<Student> list = new ArrayList<>();
-        list.add(new Student("홍길동", 80));
-        list.add(new Student("김길동", 70));
-        // ...
+public class KeyListenerEx extends JFrame {
+    JPanel cp = new JPanel();
+    JLabel[] keyMessage;
 
-        // 점수 기준 내림차순 정렬하여 1명만 출력
-        list.stream()
-            .sorted((o1,o2) -> o2.score - o1.score)
-            .limit(1)
-            .forEach(System.out::println);
+    KeyListenerEx(){
+        setTitle("KeyListner 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setContentPane(cp);
+        cp.addKeyListener(new myKeyListener());
 
-        // 점수가 80점 이상인 학생 필터링
-        list.stream()
-            .filter(std -> std.score >= 80)
-            .sorted((o1,o2) -> o1.score - o2.score)
-            .forEach(System.out::println);
+        keyMessage = new JLabel[3];
+        keyMessage[0] = new JLabel(" getKeyCode() ");
+        keyMessage[1] = new JLabel(" getKeyChar() ");
+        keyMessage[2] = new JLabel(" getKeyText() ");
+
+        for (int i=0; i<keyMessage.length;i++){
+            cp.add(keyMessage[i]);
+            keyMessage[i].setOpaque(true);
+            keyMessage[i].setBackground(Color.CYAN);
+        }
+
+        setSize(300,200);
+        setVisible(true);
+        cp.requestFocusInWindow();
     }
+
+    class myKeyListener extends KeyAdapter {
+        public void keyPressed(KeyEvent e){
+            int keyCode = e.getKeyCode();
+            char keyChar = e.getKeyChar();
+            keyMessage[0].setText(Integer.toString(keyCode));
+            keyMessage[1].setText(Character.toString(keyChar));
+            keyMessage[2].setText(KeyEvent.getKeyText(keyCode));
+        }
+    }
+    public static void main(String[] args) { new KeyListenerEx(); }
 }
 
 ```
 
-**[Lab 2] 단어장 GUI와 람다식**
-
-* **내용:** 단어장 로직을 GUI에 연결하고 이벤트 처리를 람다식으로 구현합니다.
-* **코드 파일:** `week13/lab02/MainFrame.java`, `VocManager.java`
+**[Lab 7] 이미지 버튼**
+* **내용:** 마우스 상태(기본, 롤오버, 클릭)에 따라 이미지가 변하는 버튼을 만듦.
 
 ```java
-package week13.lab02;
+package week12.example04;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainFrame extends JFrame {
-    // ...
-    private void initLayout() {
-        this.centerPanel = new JPanel();
-        this.northPanel = new JPanel();
-        JButton btn = new JButton("클릭");
-        
-        // 람다식을 이용한 이벤트 처리
-        btn.addActionListener(e -> centerPanel.setBackground(Color.BLUE));
-        
-        this.northPanel.add(btn);
-        frame.add(this.northPanel, "North");
-        frame.add(this.centerPanel, "Center");
+public class ButtonImageEx extends JFrame {
+    ButtonImageEx(){
+        setTitle("이미지 버튼 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Container cp = getContentPane();
+        cp.setLayout(new FlowLayout());
+
+        ImageIcon normalIcon = new ImageIcon("img/Left.png");
+        ImageIcon rolloverIcon = new ImageIcon("img/Right.png");
+        ImageIcon pressedIcon = new ImageIcon("img/Up.png");
+
+        JButton btn = new JButton("call~~", normalIcon);
+        btn.setPressedIcon(pressedIcon);
+        btn.setRolloverIcon(rolloverIcon);
+
+        cp.add(btn);
+        setSize(250,150);
+        setVisible(true);
     }
+
+    public static void main(String[] args) {
+        new ButtonImageEx();
+    }
+}
 
 ```
